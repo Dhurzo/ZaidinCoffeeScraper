@@ -13,35 +13,34 @@ class CategoryRepositoryImpl(CategoryRepository):
         self._logger = logger
 
     async def fetch_categories(self) -> List[Tuple[str, str]]:
-        browser = await self._client.get_browser()
-        try:
+        async with self._client as browser:
             page = await browser.new_page()
-            self._logger.info("→ Loading main page...")
-            await page.goto(f"{self._base_url}/tienda", wait_until="networkidle")
-
             try:
-                await page.click("button:has-text('Aceptar')", timeout=3000)
-                self._logger.info("✓ Cookies accepted")
-            except Exception:
-                self._logger.error("No cookie banner found")
+                self._logger.info("→ Loading main page...")
+                await browser.goto(page, f"{self._base_url}/tienda")
 
-            category_links = await page.query_selector_all("a.grid-category__title")
-            self._logger.info(
-                f"Found {len(category_links)} category links,... scraping..."
-            )
+                try:
+                    await page.click("button:has-text('Aceptar')", timeout=3000)
+                    self._logger.info("✓ Cookies accepted")
+                except Exception:
+                    self._logger.error("No cookie banner found")
 
-            categories = []
-            tarjet_categories = ["Gama de cafés"]
+                category_links = await page.query_selector_all("a.grid-category__title")
+                self._logger.info(
+                    f"Found {len(category_links)} category links,... scraping..."
+                )
 
-            for link in category_links:
-                name = (await link.inner_text()).strip()
-                url = await link.get_attribute("href")
+                categories = []
+                tarjet_categories = ["Gama de cafés"]
 
-                if name in tarjet_categories and url:
-                    full_url = urljoin(self._base_url, url)
-                    categories.append((name, full_url))
+                for link in category_links:
+                    name = (await link.inner_text()).strip()
+                    url = await link.get_attribute("href")
 
-            return categories
+                    if name in tarjet_categories and url:
+                        full_url = urljoin(self._base_url, url)
+                        categories.append((name, full_url))
 
-        finally:
-            await browser.close()
+                return categories
+            finally:
+                await browser.close_page(page)

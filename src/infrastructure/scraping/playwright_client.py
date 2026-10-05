@@ -19,12 +19,10 @@ class PlaywrightClient(WebClient):
         return await self.browser.new_page()
 
     async def goto(self, page, url: str):
-        await page.goto(url, wait_until="networkidle")
+        await page.goto(url, wait_until="domcontentloaded")
 
     async def close_page(self, page):
         await page.close()
 
     async def get_browser(self) -> Browser:
-        playwright = await async_playwright().start()
-        browser = await playwright.chromium.launch(headless=True, args=["--no-sandbox"])
-        return browser
+        return self.browser

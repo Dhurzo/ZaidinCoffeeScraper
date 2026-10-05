@@ -1,3 +1,4 @@
+import asyncio
 from typing import List
 
 from src.domain.entities.coffee import Coffee
@@ -8,6 +9,8 @@ from src.infrastructure.services.coffee_scraper import CoffeeScraper
 
 
 class CoffeeRepositoryImpl(CoffeeRepository):
+    MAX_CONCURRENT_PRODUCT_PAGES = 4
+
     def __init__(
         self,
         coffee_scraper: CoffeeScraper,
@@ -18,19 +21,21 @@ class CoffeeRepositoryImpl(CoffeeRepository):
 
     async def fetch_by_category(self, category_url: str) -> List[Coffee]:
         try:
-            coffees = []
-            products = await self._scraper.scrape_category(category_url)
+            async with self._scraper:
+                products = await self._scraper.scrape_category(category_url)
+                semaphore = asyncio.Semaphore(self.MAX_CONCURRENT_PRODUCT_PAGES)
 
-            for product in products:
-                if product.name.startswith(".Vale"):
-                    continue
-                if product.href:
-                    details = await self._scraper.scrape_details(product.href)
-                    coffee = self._mapper.to_entity(product, details)
-                    if coffee:
-                        coffees.append(coffee)
+                async def fetch_coffee(product):
+                    if product.name.startswith(".Vale") or not product.href:
+                        return None
+                    async with semaphore:
+                        details = await self._scraper.scrape_details(product.href)
+                    return self._mapper.to_entity(product, details)
 
-            return coffees
+                results = await asyncio.gather(
+                    *(fetch_coffee(product) for product in products)
+                )
+                return [coffee for coffee in results if coffee]
         except Exception as e:
             raise CoffeeScrapingError(
                 f"Error fetching category {category_url}: {str(e)}"
