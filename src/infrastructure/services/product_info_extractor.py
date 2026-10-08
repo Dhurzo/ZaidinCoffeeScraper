@@ -1,7 +1,7 @@
 from typing import Any
 
 from src.application.dtos.coffee_dtos import ProductBasicInfo
-from src.domain.services.product_extractors import ProductInfoExtractor
+from src.application.services.product_extractors import ProductInfoExtractor
 
 
 class WebProductInfoExtractor(ProductInfoExtractor):

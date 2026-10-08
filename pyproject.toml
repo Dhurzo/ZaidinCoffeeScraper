@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "dependency-injector>=4.46.0",
+    "import-linter>=2.3",
     "playwright>=1.52.0",
 ]
 
@@ -13,6 +14,7 @@ dependencies = [
 dev = [
     "mypy>=1.15.0",
     "ruff>=0.11.10",
+    "ty>=0.0.1a13",
 ]
 
 [tool.ruff]
@@ -35,6 +37,11 @@ skip-magic-trailing-comma = false
 line-ending = "auto"
 docstring-code-format = true
 docstring-code-line-length = "dynamic"
+
+[tool.uv.workspace]
+members = [
+    "src",
+]
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["E402"]

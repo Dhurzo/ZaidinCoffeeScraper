@@ -11,9 +11,6 @@ class ProductBasicInfo:
 
 @dataclass
 class ProductDetails:
-    sku: str
     displayed_price: str
     process: str
-    origins: List[str]
     formats: List[str]
-    packages: List[str]

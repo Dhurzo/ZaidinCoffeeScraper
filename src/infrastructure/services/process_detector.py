@@ -1,6 +1,6 @@
 import re
 
-from src.domain.services.process_detector import ProcessDetector
+from src.application.services.process_detector import ProcessDetector
 
 
 class CoffeeProcessDetector(ProcessDetector):

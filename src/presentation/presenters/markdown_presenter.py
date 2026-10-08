@@ -32,7 +32,7 @@ class MarkdownTableFormatter:
 
 
 class MarkdownPresenter(CoffeePresenterInterface):
-    def __init__(self, config: TableConfig, formatter: TableFormatter = None):
+    def __init__(self, config: TableConfig, formatter: TableFormatter | None = None):
         self._config = config
         self._formatter = formatter or MarkdownTableFormatter()
 

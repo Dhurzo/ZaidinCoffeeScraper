@@ -40,10 +40,21 @@ uv run playwright install
 And run main:
 
 ```bash
-uv run src/main.py
+uv run main.py
 ```
 
 ---
+
+Finally, you can copy the terminal output into a Markdown file and view the result like this:
+
+| Name | Price | Process |
+| :----------------------------: | :----------: | :-------------: |
+| **Colombia Las Taguas** | **27.00€/kg** | *Lavado* |
+| **El espectáculo, the amazing blend** | **27.00€/kg** | *Unknown* |
+| **Descafeinado Brasil Turquesa Arábica Natural CO2** | **28.00€/kg** | *Natural* |
+| **Etiopía Sidamo Shantawene** | **28.00€/kg** | *Lavado* |
+| **Brasil Caramelo** | **30.00€/kg** | *Natural* |
+| **Descafeinado México Azteca Arábica Lavado Mountain Water** | **30.00€/kg** | *Mountain Water* |
 
 ## Status
 

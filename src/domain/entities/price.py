@@ -1,7 +1,8 @@
 import re
 from dataclasses import dataclass
+from typing import Optional
 
-from domain.exceptions.coffee_exceptions import PriceParsingError
+from src.domain.exceptions.coffee_exceptions import PriceParsingError
 
 
 @dataclass(frozen=True)
@@ -10,7 +11,7 @@ class Price:
     weight_grams: int = 250
 
     @classmethod
-    def from_text(cls, price_text: str, format_text: str) -> "Price" | None:
+    def from_text(cls, price_text: str, format_text: str) -> Optional["Price"]:
         try:
             clean = price_text.strip().replace("€", "")
             if "," in clean and "." not in clean:

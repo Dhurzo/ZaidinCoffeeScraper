@@ -1,6 +1,8 @@
 from dependency_injector import containers, providers
 
-from src.application.configuration.appConfig import AppConfig
+from src.infrastructure.configuration.scraping_config import (
+    InfrastructureScrapingConfig,
+)
 from src.presentation.presenters.configurations.markdown_configuration_factory import (
     MarkdownTableConfigFactory,
 )
@@ -8,7 +10,9 @@ from src.presentation.presenters.configurations.markdown_configuration_factory i
 
 class Container(containers.DeclarativeContainer):
     # Configuration
-    config: providers.Singleton = providers.Singleton(AppConfig.create_default)
+    config: providers.Singleton = providers.Singleton(
+        InfrastructureScrapingConfig.create_default
+    )
 
     # Web Client
     web_client: providers.Singleton = providers.Singleton(
@@ -85,6 +89,7 @@ class Container(containers.DeclarativeContainer):
         web_client=web_client,
         scraping_service=scraping_service,
         logger=logger,
+        base_url=config.provided.base_url,
     )
 
     # Repositories

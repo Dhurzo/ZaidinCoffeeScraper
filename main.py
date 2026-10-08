@@ -20,7 +20,7 @@ async def run_app() -> int:
     try:
         logger.info("Starting scraper...")
         result = await app.run()
-        logger.info(result)
+        logger.info(f"\n{result}")
     except Exception as e:
         logger.error(f"Error running application: {str(e)}")
         return 1

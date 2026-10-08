@@ -1,9 +1,9 @@
-from domain.exceptions.coffee_exceptions import PriceParsingError
 from src.application.dtos.coffee_dtos import ProductBasicInfo, ProductDetails
 from src.application.interfaces.logger import ILogger
+from src.application.mappers.coffee_mapper import CoffeeMapper
 from src.domain.entities.coffee import Coffee
 from src.domain.entities.price import Price
-from src.domain.mappers.coffee_mapper import CoffeeMapper
+from src.domain.exceptions.coffee_exceptions import PriceParsingError
 
 
 class CoffeeMapperImpl(CoffeeMapper):
@@ -22,12 +22,10 @@ class CoffeeMapperImpl(CoffeeMapper):
 
             return Coffee(
                 name=basic_info.name,
-                sku=details.sku,
                 price_per_kg=price.amount,
                 process=details.process,
-                origins=details.origins,
                 formats=details.formats,
-                packages=details.packages,
             )
         except PriceParsingError as e:
             self._logger.error(f"Error mapping coffee {basic_info.name}: {e.original}")
+            return None
